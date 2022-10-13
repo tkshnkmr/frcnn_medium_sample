@@ -1,6 +1,9 @@
 import torch
 import config
 import utils
+import glob
+import numpy as np
+import cv2
 
 
 # load model
@@ -17,11 +20,17 @@ img_format="jpg"
 test_imgs = glob.glob(f"{test_dir}/*.{img_format}")
 
 # prepare drawing
-class_colors = np.random.uniform(0, 255, size=(len(config.num_classes), 3))
+class_colors = np.random.uniform(0, 255, size=(config.num_classes, 3))
 
 # inference
-for imgs, annotations in data_loader:
-    imgs = list(img.to(device) for img in imgs)
-    annotations = [{k: v.to(device) for k, v in t.items()} for t in annotations]
-    with torch.no_grad():
-        predictions = model(imgs)
+for i in range(len(test_imgs)):
+    img_name = test_imgs[i]
+    img = cv2.imread(img_name)
+
+    # display
+    cv2.imshow("input image", img)
+    cv2.waitKey(0)
+
+    # with torch.no_grad():
+    #     prediction = model(img)
+    print(f"inference on {img_name} done.")
