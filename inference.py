@@ -4,8 +4,9 @@ import utils
 import glob
 import numpy as np
 import cv2
+from pathlib import Path
 
-def draw_bboxes(img, preds, thre, class_colors):
+def draw_bboxes(img, preds, thre, class_colors, save_fname):
     preds = [{k: v.to('cpu') for k,v in t.items()} for t in preds]
 
     if len(preds[0]['boxes']) != 0:
@@ -23,7 +24,10 @@ def draw_bboxes(img, preds, thre, class_colors):
                         (int(box[2]), int(box[3])),
                         color, 2)
         cv2.imshow('prediction', img)
-        cv2.waitKey(0)
+        cv2.waitKey(10)
+
+        # save the image
+        cv2.imwrite(save_fname, img)
 
         
 def inference_1img(model, img_name, device, thre, class_colors):
@@ -45,13 +49,16 @@ def inference_1img(model, img_name, device, thre, class_colors):
         preds = model(img)
     print(f"inference on {img_name} done.")
 
-    draw_bboxes(in_img, preds, thre, class_colors)
+    save_fname = str(Path(config.result_img_dir) / Path(img_name).name)
+    draw_bboxes(in_img, preds, thre, class_colors, save_fname)
 
 
 def main():
+    Path(config.result_img_dir).mkdir(parents=True, exist_ok=True)
+    
     # load model
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    saved_name='result/last_model.pth'
+    saved_name = config.save_model_name
     checkpoint = torch.load(saved_name, map_location=device)
     model = utils.get_model_object_detector(config.num_classes)
     model.load_state_dict(checkpoint['model_state_dict'])

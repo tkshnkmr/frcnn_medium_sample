@@ -1,6 +1,8 @@
 # path to your own data and coco file
 train_data_dir = "data/train"
 train_coco = "data/my_train_coco.json"
+# train_data_dir = "/home/mas/proj/jfe/result/warped_block/target"
+# train_coco = "/home/mas/proj/jfe/result/warped_block/jfe-nasogawa-warped-195.json"
 
 # Batch size
 train_batch_size = 1
@@ -20,6 +22,12 @@ momentum = 0.9
 weight_decay = 0.005
 
 # for inference
+save_model_name = 'result/last_model.pth'
+result_img_dir = 'result/imgs'
+detection_threshold = 0.2
+
 test_data_dir = 'data/test'
 test_img_format = 'jpg'
-detection_threshold = 0.4
+# test_data_dir = '/home/mas/proj/jfe/result/warped_block/target'
+# test_img_format = 'png'
+
