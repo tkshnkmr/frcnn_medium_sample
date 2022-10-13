@@ -17,14 +17,19 @@ def draw_bboxes(img, preds, thre, class_colors):
 
         for j, box in enumerate(boxes):
             color = class_colors[pred_classes[j]]
-            
+            cv2.rectangle(img,
+                        (int(box[0]), int(box[1])),
+                        (int(box[2]), int(box[3])),
+                        color, 2)
+        cv2.imshow('prediction', img)
+        cv2.waitKey(0)
 
 def inference_1img(model, img_name, device, thre, class_colors):
     img = cv2.imread(img_name)
 
     # display
     cv2.imshow("input image", img)
-    cv2.waitKey(0)
+    cv2.waitKey(1)
 
     # convert to tensor
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB).astype(np.float32)
