@@ -91,3 +91,13 @@ def get_model_instance_segmentation(num_classes):
     model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
 
     return model
+
+def save_model(epoch, model, optimizer):
+    """
+    Function to save the trained model till current epoch, or whenver called
+    """
+    torch.save({
+                'epoch': epoch+1,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                }, 'result/last_model.pth')

@@ -5,6 +5,7 @@ from utils import (
     collate_fn,
     get_transform,
     myOwnDataset,
+    save_model,
 )
 
 print("Torch version:", torch.__version__)
@@ -65,9 +66,4 @@ for epoch in range(config.num_epochs):
 
         print(f"Iteration: {i}/{len_dataloader}, Loss: {losses}")
 
-torch.save({'epoch': config.num_epochs+1,
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict()},
-           'result/best_model.pth')
-
-
+save_model(config.num_epochs, model, optimizer)
