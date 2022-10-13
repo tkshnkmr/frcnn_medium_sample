@@ -24,15 +24,16 @@ def draw_bboxes(img, preds, thre, class_colors):
         cv2.imshow('prediction', img)
         cv2.waitKey(0)
 
+        
 def inference_1img(model, img_name, device, thre, class_colors):
-    img = cv2.imread(img_name)
+    in_img = cv2.imread(img_name)
 
     # display
-    cv2.imshow("input image", img)
+    cv2.imshow("input image", in_img)
     cv2.waitKey(1)
 
     # convert to tensor
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB).astype(np.float32)
+    img = cv2.cvtColor(in_img, cv2.COLOR_BGR2RGB).astype(np.float32)
     img /= 255.0
     img = np.transpose(img, (2,0,1)) # HWC -> CHW
     img = torch.tensor(img, dtype=torch.float).to(device)
@@ -43,9 +44,7 @@ def inference_1img(model, img_name, device, thre, class_colors):
         preds = model(img)
     print(f"inference on {img_name} done.")
 
-    draw_bboxes(img, preds, thre, class_colors)
-
-
+    draw_bboxes(in_img, preds, thre, class_colors)
 
 
 def main():
@@ -71,5 +70,6 @@ def main():
         img_name = test_imgs[i]
         inference_1img(model, img_name, device, detection_thre, class_colors)
 
+        
 if __name__ == "__main__":
     main()
