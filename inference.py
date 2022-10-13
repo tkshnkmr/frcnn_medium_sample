@@ -5,7 +5,17 @@ import glob
 import numpy as np
 import cv2
 
-def inference_1img(model, img_name, device):
+def draw_bboxes(preds, thre):
+    preds = [{k: v.to('cpu') for k,v in t.items()} for t in preds]
+
+    if len(preds[0]['boxes']) != 0:
+        boxes = preds[0]['boxes'].data.numpy()
+        scores = preds[0]['scores'].data.numpy()
+        
+        boxes = boxes[scores >= thre].astype(np.int32)
+            
+
+def inference_1img(model, img_name, thre, device):
     img = cv2.imread(img_name)
 
     # display
@@ -19,9 +29,12 @@ def inference_1img(model, img_name, device):
     img = torch.tensor(img, dtype=torch.float).to(device)
     img = torch.unsqueeze(img,0) # add batch dim
 
+    # run inference
     with torch.no_grad():
-        prediction = model(img)
+        preds = model(img)
     print(f"inference on {img_name} done.")
+
+    draw_bboxes(preds, thre)
 
 
 
@@ -42,11 +55,12 @@ def main():
 
     # prepare for drawing
     class_colors = np.random.uniform(0, 255, size=(config.num_classes, 3))
+    detection_thre = 0.8
 
     # inference
     for i in range(len(test_imgs)):
         img_name = test_imgs[i]
-        inference_1img(model, img_name, device)
+        inference_1img(model, img_name, detection_thre, device)
 
 if __name__ == "__main__":
     main()
