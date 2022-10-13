@@ -1,12 +1,13 @@
 import torch
 import config
 from utils import (
-    get_model_instance_segmentation,
+    get_model_object_detector,
     collate_fn,
     get_transform,
     myOwnDataset,
     save_model,
 )
+from pathlib import Path
 
 print("Torch version:", torch.__version__)
 
@@ -35,7 +36,7 @@ for imgs, annotations in data_loader:
     print(annotations)
 
 
-model = get_model_instance_segmentation(config.num_classes)
+model = get_model_object_detector(config.num_classes)
 
 # move model to the right device
 model.to(device)
@@ -47,6 +48,9 @@ optimizer = torch.optim.SGD(
 )
 
 len_dataloader = len(data_loader)
+
+# crete output directory
+Path("result/").mkdir(parents=True, exist_ok=True)
 
 # Training
 for epoch in range(config.num_epochs):

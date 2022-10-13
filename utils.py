@@ -82,7 +82,7 @@ def collate_fn(batch):
     return tuple(zip(*batch))
 
 
-def get_model_instance_segmentation(num_classes):
+def get_model_object_detector(num_classes):
     # load an instance segmentation model pre-trained pre-trained on COCO
     model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=False)
     # get number of input features for the classifier
