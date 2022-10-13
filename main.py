@@ -64,3 +64,10 @@ for epoch in range(config.num_epochs):
         optimizer.step()
 
         print(f"Iteration: {i}/{len_dataloader}, Loss: {losses}")
+
+torch.save({'epoch': config.num_epochs+1,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict()},
+           'result/best_model.pth')
+
+
