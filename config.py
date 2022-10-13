@@ -18,3 +18,5 @@ num_epochs = 10
 lr = 0.005
 momentum = 0.9
 weight_decay = 0.005
+
+detection_threshold = 0.4

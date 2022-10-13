@@ -11,6 +11,7 @@ def draw_bboxes(img, preds, thre, class_colors):
     if len(preds[0]['boxes']) != 0:
         boxes = preds[0]['boxes'].data.numpy()
         scores = preds[0]['scores'].data.numpy()
+        print(f"boxes={boxes}, scores = {scores}")
         
         boxes = boxes[scores >= thre].astype(np.int32)
         pred_classes = [i for i in preds[0]['labels'].cpu().numpy() ]
@@ -63,12 +64,11 @@ def main():
 
     # prepare for drawing
     class_colors = np.random.uniform(0, 255, size=(config.num_classes, 3))
-    detection_thre = 0.8
 
     # inference
     for i in range(len(test_imgs)):
         img_name = test_imgs[i]
-        inference_1img(model, img_name, device, detection_thre, class_colors)
+        inference_1img(model, img_name, device, config.detection_threshold, class_colors)
 
         
 if __name__ == "__main__":
