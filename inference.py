@@ -5,7 +5,7 @@ import glob
 import numpy as np
 import cv2
 
-def inference_1img(model, img_name):
+def inference_1img(model, img_name, device):
     img = cv2.imread(img_name)
 
     # display
@@ -13,9 +13,14 @@ def inference_1img(model, img_name):
     cv2.waitKey(0)
 
     # convert to tensor
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB).astype(np.float32)
+    img /= 255.0
+    img = np.transpose(img, (2,0,1)) # HWC -> CHW
+    img = torch.tensor(img, dtype=torch.float).to(device)
+    img = torch.unsqueeze(img,0) # add batch dim
 
-    # with torch.no_grad():
-    #     prediction = model(img)
+    with torch.no_grad():
+        prediction = model(img)
     print(f"inference on {img_name} done.")
 
 
@@ -35,14 +40,13 @@ def main():
     img_format="jpg"
     test_imgs = glob.glob(f"{test_dir}/*.{img_format}")
 
-    # prepare drawing
+    # prepare for drawing
     class_colors = np.random.uniform(0, 255, size=(config.num_classes, 3))
 
     # inference
     for i in range(len(test_imgs)):
         img_name = test_imgs[i]
-        inference_1img(model, img_name)
-
+        inference_1img(model, img_name, device)
 
 if __name__ == "__main__":
     main()
