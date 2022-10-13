@@ -1,6 +1,6 @@
 # path to your own data and coco file
-train_data_dir = "my_data/train"
-train_coco = "my_data/my_train_coco.json"
+train_data_dir = "data/train"
+train_coco = "data/my_train_coco.json"
 
 # Batch size
 train_batch_size = 1

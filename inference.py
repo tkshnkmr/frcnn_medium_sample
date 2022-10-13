@@ -3,21 +3,21 @@ import config
 import utils
 
 
-# load data
-my_dataset = utils.myOwnDataset(
-    root=config.train_data_dir, annotation=config.train_coco, transforms=get_transform()
-)
-data_loader = torch.utils.data.DataLoader(
-    my_dataset,
-    batch_size=config.train_batch_size,
-    shuffle=config.train_shuffle_dl,
-    num_workers=config.num_workers_dl,
-    collate_fn=collate_fn,
-)
-
 # load model
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+saved_name='result/last_model.pth'
+checkpoint = torch.load(saved_name, map_location=device)
 model = utils.get_model_object_detector(config.num_classes)
-model.eval()
+model.load_state_dict(checkpoint['model_state_dict'])
+model.to(device).eval()
+
+# load data
+test_dir = 'data/test'
+img_format="jpg"
+test_imgs = glob.glob(f"{test_dir}/*.{img_format}")
+
+# prepare drawing
+class_colors = np.random.uniform(0, 255, size=(len(config.num_classes), 3))
 
 # inference
 for imgs, annotations in data_loader:
