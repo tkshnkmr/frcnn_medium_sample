@@ -58,8 +58,8 @@ def main():
     model.to(device).eval()
 
     # load data
-    test_dir = 'data/test'
-    img_format="jpg"
+    test_dir = config.test_data_dir
+    img_format = config.test_img_format
     test_imgs = glob.glob(f"{test_dir}/*.{img_format}")
 
     # prepare for drawing
