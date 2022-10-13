@@ -24,7 +24,7 @@ def draw_bboxes(img, preds, thre, class_colors, save_fname):
                         (int(box[2]), int(box[3])),
                         color, 2)
         cv2.imshow('prediction', img)
-        cv2.waitKey(10)
+        cv2.waitKey(1)
 
         # save the image
         cv2.imwrite(save_fname, img)
