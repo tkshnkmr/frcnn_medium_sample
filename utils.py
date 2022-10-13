@@ -82,7 +82,7 @@ def collate_fn(batch):
     return tuple(zip(*batch))
 
 
-def get_model_instance_segmentation(num_classes):
+def get_model_object_detector(num_classes):
     # load an instance segmentation model pre-trained pre-trained on COCO
     model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=False)
     # get number of input features for the classifier
@@ -91,3 +91,13 @@ def get_model_instance_segmentation(num_classes):
     model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
 
     return model
+
+def save_model(epoch, model, optimizer):
+    """
+    Function to save the trained model till current epoch, or whenver called
+    """
+    torch.save({
+                'epoch': epoch+1,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                }, 'result/last_model.pth')

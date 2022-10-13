@@ -70,4 +70,4 @@ for epoch in range(config.num_epochs):
 
         print(f"Iteration: {i}/{len_dataloader}, Loss: {losses}")
 
-save_model(config.num_epochs, model, optimizer, save_name=config.save_model_name)
+save_model(config.num_epochs, model, optimizer)
