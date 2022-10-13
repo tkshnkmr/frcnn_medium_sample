@@ -5,7 +5,7 @@ import glob
 import numpy as np
 import cv2
 
-def draw_bboxes(preds, thre):
+def draw_bboxes(img, preds, thre, class_colors):
     preds = [{k: v.to('cpu') for k,v in t.items()} for t in preds]
 
     if len(preds[0]['boxes']) != 0:
@@ -13,9 +13,13 @@ def draw_bboxes(preds, thre):
         scores = preds[0]['scores'].data.numpy()
         
         boxes = boxes[scores >= thre].astype(np.int32)
+        pred_classes = [i for i in preds[0]['labels'].cpu().numpy() ]
+
+        for j, box in enumerate(boxes):
+            color = class_colors[pred_classes[j]]
             
 
-def inference_1img(model, img_name, thre, device):
+def inference_1img(model, img_name, device, thre, class_colors):
     img = cv2.imread(img_name)
 
     # display
@@ -34,7 +38,7 @@ def inference_1img(model, img_name, thre, device):
         preds = model(img)
     print(f"inference on {img_name} done.")
 
-    draw_bboxes(preds, thre)
+    draw_bboxes(img, preds, thre, class_colors)
 
 
 
@@ -60,7 +64,7 @@ def main():
     # inference
     for i in range(len(test_imgs)):
         img_name = test_imgs[i]
-        inference_1img(model, img_name, detection_thre, device)
+        inference_1img(model, img_name, device, detection_thre, class_colors)
 
 if __name__ == "__main__":
     main()
